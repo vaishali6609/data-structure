@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define SIZE 10
+
+typedef struct {
+    int key;
+    int value;
+} Entry;
+
+typedef struct {
+    Entry *table[SIZE];
+} HashTable;
+
+int hash(int key);
+void initHashTable(HashTable *ht);
+void insertOpenAddressing(HashTable *ht, int key, int value);
+void insertClosedAddressing(HashTable *ht, int key, int value);
+void insertRehashing(HashTable *ht, int key, int value);
+bool search(HashTable *ht, int key);
+
+int main() {
+    HashTable ht_open_addressing, ht_closed_addressing, ht_rehashing;
+    initHashTable(&ht_open_addressing);
+    initHashTable(&ht_closed_addressing);
+    initHashTable(&ht_rehashing);
+
+    insertOpenAddressing(&ht_open_addressing, 1, 10);
+    insertOpenAddressing(&ht_open_addressing, 11, 20);
+    insertClosedAddressing(&ht_closed_addressing, 1, 10);
+    insertClosedAddressing(&ht_closed_addressing, 11, 20);
+    insertRehashing(&ht_rehashing, 1, 10);
+    insertRehashing(&ht_rehashing, 11, 20);
+
+    printf("Key 1 found in open addressing: %s\n", search(&ht_open_addressing, 1) ? "Yes" : "No");
+    printf("Key 11 found in closed addressing: %s\n", search(&ht_closed_addressing, 11) ? "Yes" : "No");
+    printf("Key 1 found in rehashing: %s\n", search(&ht_rehashing, 1) ? "Yes" : "No");
+
+    return 0;
+}
+
+int hash(int key) {
+    return key % SIZE;
+}
+
+void initHashTable(HashTable *ht) {
+    for (int i = 0; i < SIZE; i++) {
+        ht->table[i] = NULL;
+    }
+}
+
+void insertOpenAddressing(HashTable *ht, int key, int value) {
+    int index = hash(key);
+
+    while (ht->table[index] != NULL) {
+        index = (index + 1) % SIZE;
+    }
+
+    Entry *entry = (Entry *)malloc(sizeof(Entry));
+    entry->key = key;
+    entry->value = value;
+
+    ht->table[index] = entry;
+}
+
+void insertClosedAddressing(HashTable *ht, int key, int value) {
+    int index = hash(key);
+
+    if (ht->table[index] == NULL) {
+        Entry *entry = (Entry *)malloc(sizeof(Entry));
+        entry->key = key;
+        entry->value = value;
+
+        ht->table[index] = entry;
+    } else {
+        
+        printf("Collision occurred at index %d\n", index);
+    }
+}
+
+void insertRehashing(HashTable *ht, int key, int value) {
+    int index = hash(key);
+
+    if (ht->table[index] != NULL) {
+        // Collision occurred, rehash
+        index = (index + 1) % SIZE;
+    }
+
+    Entry *entry = (Entry *)malloc(sizeof(Entry));
+    entry->key = key;
+    entry->value = value;
+
+    ht->table[index] = entry;
+}
+
+bool search(HashTable *ht, int key) {
+    int index = hash(key);
+
+    while (ht->table[index] != NULL) {
+        if (ht->table[index]->key == key) {
+            return true;
+        }
+        index = (index + 1) % SIZE;
+    }
+
+    return false;
+}
+
+OUTPUT-
+Key 1 found in open addressing: Yes
+Key 11 found in closed addressing: No
+Key 1 found in rehashing: Yes
+Collision occurred at index 1
