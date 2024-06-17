@@ -1,0 +1,271 @@
+USING ARRAYS-
+#include <stdio.h>  
+int stack[100],i,j,choice=0,n,top=-1;  
+void push();  
+void pop();  
+void show();  
+void main ()  
+{  
+     
+    printf("Enter the number of elements in the stack ");  
+    scanf("%d",&n);  
+    printf("****Stack operations using array****");  
+ 
+printf("\n----------------------------------------------\n");  
+    while(choice != 4)  
+    {  
+        printf("Chose one from the below options...\n");  
+        printf("\n1.Push\n2.Pop\n3.Show\n4.Exit");  
+        printf("\n Enter your choice \n");        
+        scanf("%d",&choice);  
+        switch(choice)  
+        {  
+            case 1:  
+            {  
+                push();  
+                break;  
+            }  
+            case 2:  
+            {  
+                pop();  
+                break;  
+            }  
+            case 3:  
+            {  
+                show();  
+                break;  
+            }  
+            case 4:  
+            {  
+                printf("Exiting....");  
+                break;  
+            }  
+            default:  
+            {  
+                printf("Please Enter valid choice ");  
+            }  
+        };  
+    }  
+}  
+ 
+void push ()  
+{  
+    int val;      
+    if (top == n )  
+    printf("\n Overflow");  
+    else  
+    {  
+        printf("Enter the value?");  
+        scanf("%d",&val);        
+        top = top +1;  
+        stack[top] = val;  
+    }  
+}  
+ 
+void pop ()  
+{  
+    if(top == -1)  
+    printf("Underflow");  
+    else  
+    top = top -1;  
+}  
+void show()  
+{  
+    for (i=top;i>=0;i--)  
+    {  
+        printf("%d\n",stack[i]);  
+    }  
+    if(top == -1)  
+    {  
+        printf("Stack is empty");  
+    }  
+}
+
+OUTPUT-
+Enter the number of elements in the stack: 3
+****Stack operations using array****
+----------------------------------------------
+Chose one from the below options...
+
+1.Push
+2.Pop
+3.Show
+4.Exit
+
+Enter your choice: 1
+Enter the value? 10
+
+Enter your choice: 1
+Enter the value? 20
+
+Enter your choice: 3
+20
+10
+
+Enter your choice: 2
+
+Enter your choice: 3
+10
+
+Enter your choice: 4
+Exiting....
+
+USING LINKED LIST-
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+void push();
+void pop();
+void display();
+void exitProgram();
+int isEmpty();
+
+struct Node* top = NULL;
+
+int main() {
+    int choice;
+    
+    while (1) {
+        printf("\n**** Stack operations using linked list ****\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1:
+                push();
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                exitProgram();
+                break;
+            default:
+                printf("Invalid choice, please try again.\n");
+        }
+    }
+    return 0;
+}
+
+void push() {
+    int value;
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    
+    if (newNode == NULL) {
+        printf("Memory allocation failed. Unable to push element.\n");
+        return;
+    }
+    
+    printf("Enter the value to push: ");
+    scanf("%d", &value);
+    
+    newNode->data = value;
+    newNode->next = top;
+    top = newNode;
+    
+    printf("Value %d pushed onto the stack.\n", value);
+}
+
+void pop() {
+    if (isEmpty()) {
+        printf("Stack underflow. No elements to pop.\n");
+        return;
+    }
+    
+    struct Node* temp = top;
+    top = top->next;
+    printf("Value %d popped from the stack.\n", temp->data);
+    free(temp);
+}
+
+
+void display() {
+    if (isEmpty()) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    
+    struct Node* temp = top;
+    printf("Stack elements are:\n");
+    
+    while (temp != NULL) {
+        printf("%d\n", temp->data);
+        temp = temp->next;
+    }
+}
+
+
+int isEmpty() {
+    return top == NULL;
+}
+
+void exitProgram() {
+    printf("Exiting....\n");
+    exit(0);
+}
+
+OUTPUT-
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter the value to push: 10
+Value 10 pushed onto the stack.
+
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 1
+Enter the value to push: 20
+Value 20 pushed onto the stack.
+
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 3
+Stack elements are:
+20
+10
+
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 2
+Value 20 popped from the stack.
+
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 3
+Stack elements are:
+10
+
+**** Stack operations using linked list ****
+1. Push
+2. Pop
+3. Display
+4. Exit
+Enter your choice: 4
+Exiting....
