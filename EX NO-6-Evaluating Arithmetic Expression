@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+
+typedef struct {
+    int top;
+    int capacity;
+    int* array;
+} Stack;
+
+Stack* createStack(int capacity) {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->array = (int*)malloc(stack->capacity * sizeof(int));
+    return stack;
+}
+
+int isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+int isFull(Stack* stack) {
+    return stack->top == stack->capacity - 1;
+}
+
+void push(Stack* stack, int item) {
+    if (isFull(stack)) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    stack->array[++stack->top] = item;
+}
+
+int pop(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+    return stack->array[stack->top--];
+}
+
+int evaluatePostfix(char* exp) {
+    Stack* stack = createStack(100); 
+    int i;
+
+    for (i = 0; exp[i]; ++i) {
+        // If the character is a digit, push it to the stack
+        if (isdigit(exp[i])) {
+            push(stack, exp[i] - '0');
+        } else {
+            int val1 = pop(stack);
+            int val2 = pop(stack);
+            switch (exp[i]) {
+                case '+': push(stack, val2 + val1); break;
+                case '-': push(stack, val2 - val1); break;
+                case '*': push(stack, val2 * val1); break;
+                case '/': push(stack, val2 / val1); break;
+            }
+        }
+    }
+    return pop(stack);
+}
+
+int main() {
+    char exp[] = "231*+9-"; // Example postfix expression
+    printf("Postfix evaluation of %s is %d\n", exp, evaluatePostfix(exp));
+    return 0;
+}
+
+OUTPUT-
+Postfix evaluation of 231*+9- is 4
