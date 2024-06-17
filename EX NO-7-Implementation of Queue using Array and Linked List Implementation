@@ -1,0 +1,191 @@
+USING ARRAYS-
+#include <stdio.h>
+#define SIZE 5
+
+void enQueue(int);
+void deQueue();
+void display();
+
+int items[SIZE], front = -1, rear = -1;
+
+int main() {
+  deQueue();
+
+  //enQueue 5 elements
+  enQueue(1);
+  enQueue(2);
+  enQueue(3);
+  enQueue(4);
+  enQueue(5);
+
+  enQueue(6);
+
+  display();
+
+  deQueue();
+
+  display();
+
+  return 0;
+}
+
+void enQueue(int value) {
+  if (rear == SIZE - 1)
+    printf("\nQueue is Full!!");
+  else {
+    if (front == -1)
+      front = 0;
+    rear++;
+    items[rear] = value;
+    printf("\nInserted -> %d", value);
+  }
+}
+
+void deQueue() {
+  if (front == -1)
+    printf("\nQueue is Empty!!");
+  else {
+    printf("\nDeleted : %d", items[front]);
+    front++;
+    if (front > rear)
+      front = rear = -1;
+  }
+}
+
+void display() {
+  if (rear == -1)
+    printf("\nQueue is Empty!!!");
+  else {
+    int i;
+    printf("\nQueue elements are:\n");
+    for (i = front; i <= rear; i++)
+      printf("%d  ", items[i]);
+  }
+  printf("\n");
+}
+
+OUTPUT-
+Inserted -> 1
+Inserted -> 2
+Inserted -> 3
+Inserted -> 4
+Inserted -> 5
+Queue is Full!!!
+Queue elements are:
+1  2  3  4  5  
+Deleted : 1
+Queue elements are:
+2  3  4  5  
+
+USING LINKED LIST-
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Queue {
+    struct Node *front, *rear;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation error!\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Queue* initQueue() {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    if (!queue) {
+        printf("Memory allocation error!\n");
+        exit(EXIT_FAILURE);
+    }
+    queue->front = queue->rear = NULL;
+    return queue;
+}
+
+int isEmpty(struct Queue* queue) {
+    return (queue->front == NULL);
+}
+
+void enqueue(struct Queue* queue, int data) {
+    struct Node* newNode = createNode(data);
+    if (isEmpty(queue)) {
+        queue->front = queue->rear = newNode;
+    } else {
+        queue->rear->next = newNode;
+        queue->rear = newNode;
+    }
+    printf("Inserted -> %d\n", data);
+}
+
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is Empty!!\n");
+        exit(EXIT_FAILURE);
+    }
+    int data = queue->front->data;
+    struct Node* temp = queue->front;
+    queue->front = queue->front->next;
+    if (queue->front == NULL) {
+        queue->rear = NULL;
+    }
+    free(temp);
+    return data;
+}
+
+void display(struct Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is Empty!!\n");
+        return;
+    }
+    printf("Queue elements are:\n");
+    struct Node* current = queue->front;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Queue* queue = initQueue();
+    
+    
+  
+    //enQueue 5 elements
+    enqueue(queue, 1);
+    enqueue(queue, 2);
+    enqueue(queue, 3);
+    enqueue(queue, 4);
+    enqueue(queue, 5);
+
+
+    display(queue);
+
+    
+    printf("Deleted : %d\n", dequeue(queue));
+
+    display(queue);
+
+    return 0;
+}
+
+OUTPUT-
+Inserted -> 1
+Inserted -> 2
+Inserted -> 3
+Inserted -> 4
+Inserted -> 5
+Queue elements are:
+1 2 3 4 5 
+Deleted : 1
+Queue elements are:
+2 3 4 5 
